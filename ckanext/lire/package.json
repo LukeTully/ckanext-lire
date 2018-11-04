@@ -1,0 +1,20 @@
+{
+  "name": "lire",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.4",
+    "babel-preset-es2015": "^6.24.1",
+    "element-ui": "^2.4.8"
+  },
+  "devDependencies": {
+    "babel-plugin-component": "^1.1.1"
+  }
+}
