@@ -1,24 +1,29 @@
-import json
-import datetime
 import random
-
 import ckan.lib.dictization.model_dictize as model_dictize
-import ckan.model as model
 import ckan.plugins as p
+import ckan.plugins.toolkit as toolkit
 from ckanext.lire.controllers.semre import (
     SEMREController,
 )
+from ckanext.lire.logic.package import get_dataset_relationships
 
 resource_dictize = model_dictize.resource_dictize
 
-class LIREPlugin(p.SingletonPlugin):
 
+class LIREPlugin(p.SingletonPlugin):
     p.implements(p.IConfigurer, inherit=True)
     p.implements(p.IConfigurable)
     p.implements(p.IRoutes, inherit=True)
     p.implements(p.IDomainObjectModification, inherit=True)
     p.implements(p.IResourceUrlChange)
     p.implements(p.ITemplateHelpers)
+    p.implements(p.IActions)
+
+
+    def get_actions(self):
+        return {
+            'package_relationships': get_dataset_relationships
+        }
 
     def configure(self, config):
         self.site_url = config.get('ckan.site_url')
@@ -26,6 +31,7 @@ class LIREPlugin(p.SingletonPlugin):
     def update_config(self, config):
         # p.toolkit.add_resource('fanstatic', 'rem')
         # check if new templates
+        p.toolkit.add_resource('fanstatic', 'lire')
         if p.toolkit.check_ckan_version(min_version='2.0'):
             if not p.toolkit.asbool(config.get('ckan.legacy_templates', False)):
                 # add the extend templates
@@ -59,32 +65,34 @@ class LIREPlugin(p.SingletonPlugin):
         map.connect('/lire/examineDatasets', controller=rem, action='examineDatasets')
 
         map.connect('/lire/storeRelationships', controller=ace, action='storeRelationships')
-    
+
         map.connect('/lire/checkDataset', controller=semre, action='checkDataset')
 
         return map
 
-    #return random int necessary to create position of graphical element (dataset)
-    def randomNum(self,num):
+    # return random int necessary to create position of graphical element (dataset)
+    def randomNum(self, num):
 
-      randNum = random.randint(0,num) 
+        randNum = random.randint(0, num)
 
-      return randNum
+        return randNum
 
     ################
     ## LIRE SEMRE ##
     ################
     # Use this function in custom template to get dataset relationships
     # It will enable us to represent them semantically
-    def semre_dataset(self,datasetName):
+    def semre_dataset(self, datasetName):
 
-      semre = SEMREController()
+        semre = SEMREController()
 
-      # To get dataset relationships we call SEMRE to whom we forward the name of the dataset
-      datasetRelationships = semre.semre_create(datasetName)
+        # To get dataset relationships we call SEMRE to whom we forward the name of the dataset
+        datasetRelationships = semre.semre_create(datasetName)
 
-      return datasetRelationships
+        return datasetRelationships
 
     def get_helpers(self):
-        return {'randomNum': self.randomNum,'semre_dataset': self.semre_dataset}
-
+        return {
+            'randomNum': self.randomNum,
+            'semre_dataset': self.semre_dataset
+        }

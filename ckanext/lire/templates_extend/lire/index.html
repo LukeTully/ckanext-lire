@@ -1,110 +1,177 @@
 {% extends "lire/page.html" %}
 {% block static_styles %}
-<link rel="stylesheet" type="text/css" href="css/bootstrap-tooltip.css" />
-<link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
+    <link rel="stylesheet" type="text/css" rel="stylesheet" href="css/bootstrap-tooltip.css"/>
+    <link rel="stylesheet" type="text/css" rel="stylesheet" href="css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" rel="stylesheet" href="css/table.css"/>
+    <link rel="stylesheet" type="text/css" rel="stylesheet" href="css/index.css"/>
+
 {% endblock %}
 {% block static_scripts %}
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/bootstrap.js"></script>
-{% endblock %}
-{% block lire_scripts %}
-  $("#form_random").blur(function() {
-    if($(this).val() == '')
-    {
-      $("#form_tag").removeAttr("disabled");
-      $("#form_group").removeAttr("disabled");
-      $("#form_organization").removeAttr("disabled");		
-    }
-    else
-    {
-      $("#form_tag").attr("disabled", "disabled");
-      $("#form_group").attr("disabled", "disabled");
-      $("#form_organization").attr("disabled", "disabled");
-    }
-  }).tooltip();
-  $("#form_tag").blur(function() {
-    if($(this).val() == '')
-    {
-      $("#form_random").removeAttr("disabled");
-      $("#form_group").removeAttr("disabled");
-      $("#form_organization").removeAttr("disabled");		
-    }
-    else
-    {
-      $("#form_random").attr("disabled", "disabled");
-      $("#form_group").attr("disabled", "disabled");
-      $("#form_organization").attr("disabled", "disabled");
-    }
-  }).tooltip();
-  $("#form_group").blur(function() {
-    if($(this).val() == '')
-    {
-      $("#form_tag").removeAttr("disabled");
-      $("#form_random").removeAttr("disabled");
-      $("#form_organization").removeAttr("disabled");		
-    }
-    else
-    {
-      $("#form_tag").attr("disabled", "disabled");
-      $("#form_random").attr("disabled", "disabled");
-      $("#form_organization").attr("disabled", "disabled");
-    }
-  }).tooltip();
-  $("#form_organization").blur(function() {
-    if($(this).val() == '')
-    {
-      $("#form_tag").removeAttr("disabled");
-      $("#form_group").removeAttr("disabled");
-      $("#form_random").removeAttr("disabled");		
-    }
-    else
-    {
-      $("#form_tag").attr("disabled", "disabled");
-      $("#form_group").attr("disabled", "disabled");
-      $("#form_random").attr("disabled", "disabled");
-    }
-  }).tooltip();
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+
 {% endblock %}
 {% block primary %}
-  <h2>Relationship Manager</h2>
-  <br> <br>
-  <form role="form" class="well" id="mainForm" action="lire/manager" method="post" name="form">
-    <table class="table" style="border:none; margin:0;">
-      <tbody>
-        <tr>
-	  <td style="border:none;">
-	    <div>
-	      <label for="form_random" class="control-label">Random</label>
-	      <input style="width:95%;" type="text" class="form-control" title="" name="form[random]" id="form_random" data-original-title="Enter random number of datasets">
-	    </div>
-	  </td>
-	  <td style="border:none;">
-	    <div>
-	      <label for="form_tag" class="control-label">Tag</label>
-	      <input style="width:95%;" type="text" class="form-control" title="" name="form[tag]" id="form_tag" data-original-title="Enter tag name">
-	    </div>
-	  </td>
-          <td style="border:none;">
-            <div>
-              <label for="form_group" class="control-label">Group</label>
-              <input style="width:95%;" type="text" class="form-control" title="" name="form[group]" id="form_group" data-original-title="Enter group name">
-            </div>
-          </td>
-          <td style="border:none;">
-            <div>
-              <label for="form_organization" class="control-label">Organization</label>
-              <input style="width:95%;" type="text" class="form-control" title="" name="form[organization]" id="form_organization" data-original-title="Enter organization name">
-            </div>
-          </td>				
-	</tr>
-	<tr>
-	  <td colspan="4" style="padding-top:30px; border:none;">
-	    <button type="submit" class="btn btn-primary">SUBMIT</button>
-	    <button type="reset" class="btn btn-primary"><i class="fa fa-refresh"></i> Reset </button>
-	  </td>			
-	</tr>				
-      </tbody>
-    </table>
-  </form>
-  
+    {% if errors %}
+        {% for name, error in errors.iteritems() %}
+            <p class="alert alert-danger">{{ error }}</p>
+        {% endfor %}
+    {% endif %}
+    <h2>Relationship Manager</h2>
+    <form role="form" class="well" id="relationshipForm" action="lire/manager" method="post" name="relationshipForm"
+          data-module="lire">
+
+        <select name="subject">
+            {% for dataset in auth_datasets %}
+                <option value="{{ dataset.name }}">{{ dataset.title }}</option>
+            {% endfor %}
+        </select>
+        <label for="relationshipType"> is a </label>
+        <select id="relationshipType" name="relationshipType">
+            {% for relationship in relationship_types %}
+                <option value="{{ loop.index0 }}">{{ relationship }}</option>
+            {% endfor %}
+        </select>
+        <select name="object">
+            {% for dataset in auth_datasets %}
+                <option value="{{ dataset.name }}">{{ dataset.title }}</option>
+            {% endfor %}
+        </select>
+        <textarea id="relationshipComment" name="comment"></textarea>
+        <input type="submit" value="submit"/>
+    </form>
+
+
+
+    {##}
+    {#    <ul>#}
+    {#        {% for pkg in relationships %}#}
+    {#            <h3>{{ pkg.title }}</h3>#}
+    {#            {% for relation in pkg.relationships %}#}
+    {#                <li>#}
+    {#                    {{ relation.type }}#}
+    {##}
+    {#                    {% if relation.subject == pkg.name %}#}
+    {#                        {{ relation.object }}#}
+    {#                    {% else %}#}
+    {#                        {{ relation.subject }}#}
+    {#                    {% endif %}#}
+    {#                </li>#}
+    {#            {% endfor %}#}
+    {#        {% endfor %}#}
+    {#    </ul>#}
+
+    <div id="app" data-module="vue-custom">
+        <template v-for="relation in tableData3">
+            <h2>${ relation.title }</h2>
+{#                        <el-table :data="relation.relationships" height="250" style="width: 100%">#}
+{#                            <el-table-column prop="object" label="Object" width="180">#}
+{#                            </el-table-column>#}
+{#                            <el-table-column prop="subject" label="Subject" width="180">#}
+{#                            </el-table-column>#}
+{#                            <el-table-column prop="type" label="Type" width="180">#}
+{#                            </el-table-column>#}
+{#                            <el-table-column prop="comment" label="Comment" width="180">#}
+{#                            </el-table-column>#}
+{#                            <el-table-column label="Operations">#}
+{#                                <template slot-scope="scope">#}
+{#                                    <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>#}
+{#                                    <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete#}
+{#                                    </el-button>#}
+{#                                </template>#}
+{#                            </el-table-column>#}
+{#                        </el-table>#}
+            <relation-box :relationships="relation.relationships"></relation-box>
+        </template>
+    </div>
+    {#<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>#}
+    {#                        <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete</el-button>#}
+    {#    <br> <br>#}
+    {#    <form role="form" class="well" id="mainForm" action="lire/manager" method="post" name="form">#}
+    {#        <table class="table" style="border:none; margin:0;">#}
+    {#            <tbody>#}
+    {#            <tr>#}
+    {#                <td style="border:none;">#}
+    {#                    <div>#}
+    {#                        <label for="form_random" class="control-label">Random</label>#}
+    {#                        <input style="width:95%;" type="text" class="form-control" title="" name="form[random]"#}
+    {#                               id="form_random" data-original-title="Enter random number of datasets">#}
+    {#                    </div>#}
+    {#                </td>#}
+    {#                <td style="border:none;">#}
+    {#                    <div>#}
+    {#                        <label for="form_tag" class="control-label">Tag</label>#}
+    {#                        <input style="width:95%;" type="text" class="form-control" title="" name="form[tag]"#}
+    {#                               id="form_tag" data-original-title="Enter tag name">#}
+    {#                    </div>#}
+    {#                </td>#}
+    {#                <td style="border:none;">#}
+    {#                    <div>#}
+    {#                        <label for="form_group" class="control-label">Group</label>#}
+    {#                        <input style="width:95%;" type="text" class="form-control" title="" name="form[group]"#}
+    {#                               id="form_group" data-original-title="Enter group name">#}
+    {#                    </div>#}
+    {#                </td>#}
+    {#                <td style="border:none;">#}
+    {#                    <div>#}
+    {#                        <label for="form_organization" class="control-label">Organization</label>#}
+    {#                        <input style="width:95%;" type="text" class="form-control" title="" name="form[organization]"#}
+    {#                               id="form_organization" data-original-title="Enter organization name">#}
+    {#                    </div>#}
+    {#                </td>#}
+    {#            </tr>#}
+    {#            <tr>#}
+    {#                <td colspan="4" style="padding-top:30px; border:none;">#}
+    {#                    <button type="submit" class="btn btn-primary">SUBMIT</button>#}
+    {#                    <button type="reset" class="btn btn-primary"><i class="fa fa-refresh"></i> Reset</button>#}
+    {#                </td>#}
+    {#            </tr>#}
+    {#            </tbody>#}
+    {#        </table>#}
+    {#    </form>#}
+
+
+
+
+    <script type="text/x-template" id="rel-box">
+        <el-table :data="relationships" height="250" style="width: 100%">
+            <el-table-column label="Type" width="180">
+                <template slot-scope="scope">
+                    <el-select v-model="newRow.type" id="type" v-if="scope.$index === editing">
+                        <el-option :value="key" :key="key" :label="option" v-for="(option,key) in relTypes">${ option }
+                        </el-option>
+                    </el-select>
+                    <div v-else>${ scope.row }</div>
+                </template>
+            </el-table-column>
+            <el-table-column prop="subject" label="Subject" width="180">
+            </el-table-column>
+            <el-table-column prop="comment" label="Comment" width="180">
+            </el-table-column>
+            <el-table-column label="Operations">
+                <template slot-scope="scope">
+                    <template v-if="editing == scope.$index">
+                        <el-button size="mini" @click="save(scope.$index, scope.row)">Save</el-button>
+                    </template>
+                    <template v-else>
+                        <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
+                        <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete
+                        </el-button>
+                    </template>
+
+                </template>
+            </el-table-column>
+        </el-table>
+    </script>
+    <script type="text/x-template" id="rel-box-row">
+        <template>
+
+        </template>
+    </script>
+
+
+    {% resource 'lire/js/custom.js' %}
+    {% resource 'lire/js/vue-custom.js' %}
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/element-ui.js"></script>
 {% endblock %}

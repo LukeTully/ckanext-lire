@@ -1,4 +1,3 @@
-MANIFEST.in
 README.rst
 setup.py
 ckanext/__init__.py
@@ -11,6 +10,9 @@ ckanext/lire/controllers/functions.py
 ckanext/lire/controllers/pan.py
 ckanext/lire/controllers/relin.py
 ckanext/lire/controllers/rem.py
+ckanext/lire/controllers/semre.py
+ckanext/lire/logic/__init__.py
+ckanext/lire/logic/package.py
 ckanext_lire.egg-info/PKG-INFO
 ckanext_lire.egg-info/SOURCES.txt
 ckanext_lire.egg-info/dependency_links.txt

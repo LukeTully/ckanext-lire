@@ -1,7 +1,7 @@
 Metadata-Version: 1.0
 Name: ckanext-lire
-Version: 0.3
-Summary: CKAN Relationship Manager
+Version: 1.0
+Summary: CKAN extension for GUI managing of dataset relationships
 Home-page: http://ckan.org/wiki/Extensions
 Author: Petar Milic
 Author-email: milicpetar86@gmail.com

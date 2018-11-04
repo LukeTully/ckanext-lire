@@ -132,10 +132,12 @@ class PANController(BaseController):
 
     links = []
 
-    for list in dataset['extras']:
-      for key,value in list.items():
-        if 'links:' in value:
-          links.append(value.lstrip('links:'))
+    if hasattr(dataset,'extras'):
+      if dataset['extras']:
+        for list in dataset['extras']:
+          for key, value in list.items():
+            if 'links:' in value:
+              links.append(value.lstrip('links:'))
 
     return links
 
